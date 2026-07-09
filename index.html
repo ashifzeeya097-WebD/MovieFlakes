@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoviesFlix</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="header">
+        <div class="title">
+            <a href="#home">Movie<span>Flakes</span></a>
+        </div>
+        <button class="menu-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <nav class="navbar-desktop">
+            <ul>
+                <li><a href="#movies">Movies</a></li>
+                <li><a href="#series">Series</a></li>
+                <li><a href="#popular">Popular</a></li>
+                <li>
+                    <div class="dropdown">
+                        <button class="dropdown-btn">Category<span class="drop-icon">🔰</span></button>
+                        <ul class="dropdown-menu">
+                            <li id="action"><a href="#action">Action</a></li>
+                            <li id="drama"><a href="#drama">Drama</a></li>
+                            <li id="romance"><a href="#romance">Romance</a></li>
+                            <li id="thriller"><a href="#thriller">Thriller</a></li>
+                            
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </nav> 
+         
+        <nav class="navbar-mobile">
+            <ul>
+                <li><a href="#movies">Movies</a></li>
+                <li><a href="#series">Series</a></li>
+                <li><a href="#popular">Popular</a></li>
+                <li class="sub-menu">
+                    <ul>
+                        <li id="action"><a href="#action">Action</a></li>
+                        <li id="drama"><a href="#drama">Drama</a></li>
+                        <li id="romance"><a href="#romance">Romance</a></li>
+                        <li id="thriller"><a href="#thriller">Thriller</a></li> 
+                    </ul>
+                </li>
+            </ul>
+        </nav>  
+    </div>
+    <div class="search-container">
+        <input type="text" placeholder="Search for movies..." class="search-input" id="inputText">
+    </div>
+
+    <h3 id="section-title" class="search-title hidden"></h3>
+
+    
+    <div class="movie-tabs">
+    <button class="tab-btn active" data-tab="trending">
+        🔥 Trending
+    </button>
+
+    <button class="tab-btn" data-tab="liked">
+        ❤️ Liked
+    </button>
+
+    <div class="tab-indicator"></div>
+</div>
+    <div class="trending-wrapper" onclick=showTrending()>
+        <button class="scroll-btn prev-btn">&#10094;</button>
+        <div class="trending-carausel">
+            
+        </div>
+        <button class="scroll-btn next-btn">&#10095;</button>
+    </div>
+
+    <div class="liked-wrapper" onclick=showliked()>
+        <button class="scroll-btn liked-prev-btn">&#10094;</button>
+        <div class="liked-row"></div>
+        <button class="scroll-btn liked-next-btn">&#10095;</button>
+    </div>
+</body>
+</html>
