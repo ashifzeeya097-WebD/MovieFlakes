@@ -168,6 +168,7 @@ body::-webkit-scrollbar {
 
 .search-container input {
     display: flex;
+    position: sticky;
     align-items: center;
     justify-content: center;
     margin: 0 10px;
