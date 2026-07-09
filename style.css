@@ -838,4 +838,14 @@ nav a{
         font-size:.95rem;
     }
 }
+@media (max-width: 300px){
+    .title{
+        display: flex;
+    }
+    .title a{
+        font-size: 1rem;
+        padding: 3px 6px;
+        margin: 2px 4px;
+    }
+}
 

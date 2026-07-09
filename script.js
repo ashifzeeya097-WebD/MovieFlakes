@@ -18,9 +18,12 @@ const movieTabs = document.querySelector(".movie-tabs");
 const likedWrapper = document.querySelector(".liked-wrapper");
 const trendingWrapper = document.querySelector(".trending-wrapper");
 const tabs = document.querySelectorAll(".tab-btn");
+const trendingBtn = document.querySelector('[data-tab="trending"]');
+const likedBtn = document.querySelector('[data-tab="liked"]');
 const dropBtn = document.querySelector(".dropdown-btn");
 const menu = document.querySelector(".dropdown-menu");
 
+let currentView = "trending";
 
 let isSearching = false;
 let searchTimeout;
@@ -378,7 +381,13 @@ function showLiked() {
 }
 
 function enterSearchMode(query) {
+
     isSearching = true;
+
+    trendingBtn.classList.add("active");
+    likedBtn.classList.remove("active");
+
+    showTrending();
 
     movieTabs.classList.add("hidden");
 
@@ -388,6 +397,13 @@ function enterSearchMode(query) {
 
 function exitSearchMode() {
     isSearching = false;
+    
+    sectionTitle.style.display = "none";
+
+    showTrending();
+
+    trendingBtn.classList.add("active");
+    likedBtn.classList.remove("active");
 
     movieTabs.classList.remove("hidden");
     sectionTitle.classList.add("hidden");
