@@ -1,5 +1,13 @@
 # MovieFlakes
 
+🎬 Live Demo:
+https://ashifzeeya097-dev.github.io/MovieFlakes/
+
+GitHub Repository:
+https://github.com/ashifzeeya097-Dev/MovieFlakes
+
+# Introduction
+
 MovieFlakes is a responsive movie discovery web application built with
 vanilla HTML, CSS, and JavaScript using the TMDB API.
 
