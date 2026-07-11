@@ -23,6 +23,7 @@ const trendingBtn = document.querySelector('[data-tab="trending"]');
 const likedBtn = document.querySelector('[data-tab="liked"]');
 const dropBtn = document.querySelector(".dropdown-btn");
 const menu = document.querySelector(".dropdown-menu");
+const logoBtn = document.querySelector(".title");
 
 let currentView = "trending";
 
@@ -446,3 +447,24 @@ function exitSearchMode() {
     sectionTitle.classList.add("hidden");
     sectionTitle.style.display = "none";
 }
+    
+ logoBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    // Clear search
+    searchInput.value = "";
+
+    // Exit search mode
+    exitSearchMode();
+
+    // Restore popular movies
+    displayMovies(trendingMovies, trendingRow);
+
+    // Scroll to top (optional)
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+ });
+
+  

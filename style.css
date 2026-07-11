@@ -12,7 +12,7 @@
     box-sizing: border-box;
 }
 html {
-    font-family: 'Helvetica', 'Poppins', sans-serif;
+    font-family: 'Poppins', 'Helvetica', sans-serif;
     color: var(--sec-color);
     background-color: var(--bg-color);
     min-height: 100%;
@@ -237,7 +237,7 @@ nav a{
     color:var(--sec-color);
     text-decoration:none;
     cursor:pointer;
-    font-size:1rem;
+    font-size: 1.05rem;
     margin:0 5px;
     border-radius:4px;
     transition:background-color .3s ease, text-shadow .3s ease;
@@ -324,7 +324,7 @@ nav a{
 .dropdown-menu{
     list-style: none;
     padding: 0;
-    border: none;
+    box-shadow: 0 0 12px rgba(36,212,252,.7);
     display: none;
     position: absolute;
     top: 3rem;
@@ -490,7 +490,6 @@ nav a{
 .movie-card {
     position: relative;
     flex: 0 0 200px;
-    width: 200px;
     max-width: 200px;
     height: 300px;
     border-radius: 10px;
@@ -566,7 +565,7 @@ nav a{
     width: 100%;
     text-align: center;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 550;
 
     white-space: nowrap;
     overflow: hidden;
@@ -806,6 +805,7 @@ nav a{
 
     .navbar-mobile li{
         width:100%;
+         
     }
 
     .navbar-mobile a{
@@ -815,6 +815,25 @@ nav a{
         text-decoration:none;
         transition:.25s;
     }
+
+    .sub-menu ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sub-menu ul li {
+    position: relative;
+    padding-left: 26px;
+}
+
+.sub-menu ul li::before {
+    content: "⏺";
+    position: absolute;
+    left: 40px;
+    top: 48%;
+    font-size: 0.7rem;
+    transform: translateY(-50%);
+}
 
     .navbar-mobile a:hover{
         background:var(--bg-color);
