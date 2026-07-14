@@ -5,7 +5,9 @@ const API_KEY = "3ea9b9899a266f601028fbdd3d760786";
 const BASE_URL = "https://api.themoviedb.org/3";
 
 const likedRow = document.querySelector(".liked-row");
-const trendingRow = document.querySelector(".trending-carausel");
+const trendingRow = document.querySelector(".trending-row");
+const popularRow = document.querySelector(".popular-row");
+
 const nextBtn = document.querySelector(".next-btn");
 const prevBtn = document.querySelector(".prev-btn");
 const likedNextBtn = document.querySelector(".liked-next-btn");
@@ -13,26 +15,27 @@ const likedPrevBtn = document.querySelector(".liked-prev-btn");
 const searchInput = document.querySelector(".search-input");
 
 const sectionTitle = document.querySelector("#section-title");
-const movieTabs = document.querySelector(".movie-tabs");
 const likedWrapper = document.querySelector(".liked-wrapper");
 const trendingWrapper = document.querySelector(".trending-wrapper");
-const tabs = document.querySelectorAll(".tab-btn");
-const trendingBtn = document.querySelector('[data-tab="trending"]');
-const likedBtn = document.querySelector('[data-tab="liked"]');
 const dropBtn = document.querySelector(".dropdown-btn");
 const menu = document.querySelector(".dropdown-menu");
 const logoBtn = document.querySelector(".title");
 
 const homeContent = document.querySelector(".home-content");
 const searchWrapper = document.querySelector(".search-wrapper");
-
 const browseGrid = document.querySelector(".browse-grid");
 const searchGrid = document.querySelector(".search-grid");
+const browseWrapper = document.querySelector(".browse-wrapper");
+const browseTitle = document.querySelector("#browse-title");
 
 let currentView = "trending";
 let trendingMovies = [];
-let browseMovies = [];
+let likedMovies = [];
+
+let currentBrowseEndpoint = "";
 let currentBrowsePage = 1;
+let isBrowsing = false;
+let isLoading = false;
 
 let isSearching = false;
 let searchTimeout;
@@ -110,13 +113,15 @@ function getMoviesEndpoint(category, timeWindow = "day") {
 
 
 async function fetchGenres() {
-    const response = await fetch(
-        `${BASE_URL}/genre/movie/list?api_key=${API_KEY}`
-    );
+    const [movieRes, tvRes] = await Promise.all([
+        fetch(`${BASE_URL}/genre/movie/list?api_key=${API_KEY}`),
+        fetch(`${BASE_URL}/genre/tv/list?api_key=${API_KEY}`)
+    ]);
 
-    const data = await response.json();
+    const movieData = await movieRes.json();
+    const tvData = await tvRes.json();
 
-    data.genres.forEach(genre => {
+    [...movieData.genres, ...tvData.genres].forEach(genre => {
         genreMap[genre.id] = genre.name;
     });
 }
@@ -169,14 +174,17 @@ function showLoader(movieRow) {
     `;
 }
 
-async function fetchMovies(endpoint, rowSelector = ".trending-carausel") {
+async function fetchMovies(endpoint, rowSelector = ".trending-row", append=false ) {
+  
   const movieRow = document.querySelector(rowSelector);
   if (!movieRow) {
     console.error("Movie row selector not found:", rowSelector);
     return;
   }
 
-  showLoader(movieRow);
+  if (!append) {
+    showLoader(movieRow);
+  }
 
   const separator = endpoint.includes("?") ? "&" : "?";
   const url = `${BASE_URL}${endpoint}${separator}api_key=${API_KEY}`;
@@ -191,20 +199,24 @@ async function fetchMovies(endpoint, rowSelector = ".trending-carausel") {
     const data = await response.json();
     const movies = Array.isArray(data.results) ? data.results : [];
 
-    if (rowSelector === ".trending-carausel") {
+    if (rowSelector === ".trending-row") {
     trendingMovies = movies;
     }
 
-    if (rowSelector === ".browse-grid") {
-        browseMovies = movies;
+    if (rowSelector === ".popular-row") {
+        popularMovies = movies;
     }
 
     if (rowSelector === ".search-grid") {
         searchMoviesList = movies;
     }
   
+    if (append) {
+      appendMovies(movies, movieRow);
+    } else {
+      displayMovies(movies, movieRow);
+    }
 
-    displayMovies(movies, movieRow);
   } catch (error) {
     console.error("Error fetching movies:", error, url);
   }
@@ -232,7 +244,8 @@ function createMovieCard(movie) {
   const posterPath = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
     : " ";
-  const releaseYear = movie.release_date ? movie.release_date.slice(0, 4) : "N/A";
+  const releaseDate = movie.release_date || movie.first_air_date;
+  const releaseYear = releaseDate ? releaseDate.slice(0, 4) : "N/A";
   const genre = movie.genre_ids?.length
     ? genreMap[movie.genre_ids[0]]
     : "N/A";
@@ -245,7 +258,7 @@ function createMovieCard(movie) {
     </div>
     <img src="${posterPath}" alt="${movie.title || "Movie Poster"}" />
     <div class="movie-info">
-      <h3 class="movie-title">${movie.title || "Untitled"}</h3>
+      <h3 class="movie-title">${movie.title || movie.name || "Untitled"}</h3>
       <div class="details">
         <span>${genre}</span>
         <span>${releaseYear}</span>
@@ -270,36 +283,69 @@ function renderLikedMovies() {
   displayMovies(Object.values(appState.liked), likedRow);
 }
 
-
-function setupScrollButtons(buttonPrev, buttonNext, row) {
-  if (!row) return;
-
-  if (buttonNext) {
-    buttonNext.addEventListener("click", () => {
-      row.scrollBy({
-        left: 500,
-        behavior: "smooth"
-      });
-    });
-  }
-
-  if (buttonPrev) {
-    buttonPrev.addEventListener("click", () => {
-      row.scrollBy({
-        left: -500,
-        behavior: "smooth"
-      });
-    });
-  }
-}
-
-if (trendingRow && nextBtn && prevBtn) {
-  setupScrollButtons(prevBtn, nextBtn, trendingRow);
-}
-
-setupScrollButtons(likedPrevBtn, likedNextBtn, likedRow);
-
 renderLikedMovies();
+
+document.querySelectorAll(".carousel-section").forEach(section => {
+
+    const prevBtn = section.querySelector(".prev, .prev-btn");
+    const nextBtn = section.querySelector(".next, .next-btn");
+    const row = section.querySelector(".movie-row");
+
+    if (!row) return;
+
+    prevBtn?.addEventListener("click", () => {
+        row.scrollBy({
+            left: -500,
+            behavior: "smooth"
+        });
+    });
+
+    nextBtn?.addEventListener("click", () => {
+        row.scrollBy({
+            left: 500,
+            behavior: "smooth"
+        });
+    });
+
+});
+
+document.querySelectorAll(".segmented-control").forEach(control => {
+
+    const buttons = control.querySelectorAll("button");
+    const slider = control.querySelector(".slider");
+
+    buttons.forEach((button, index) => {
+
+        button.addEventListener("click", async () => {
+
+            buttons.forEach(btn => btn.classList.remove("active"));
+            button.classList.add("active");
+            if(slider){
+              slider.style.transform = `translateX(${index * 100}%)`;
+            }
+            
+
+            const endpoint = button.dataset.endpoint;
+
+            const section = control.closest(".carousel-section");
+
+            let rowSelector = "";
+
+            if (section.classList.contains("trending-wrapper")) {
+                rowSelector = ".trending-row";
+            } else if (section.classList.contains("popular-wrapper")) {
+                rowSelector = ".popular-row";
+            }
+
+            if (endpoint && rowSelector) {
+                await fetchMovies(endpoint, rowSelector);
+            }
+
+        });
+
+    });
+
+});
 
 dropBtn.addEventListener("click", () => {
   menu.classList.toggle("show");
@@ -335,40 +381,6 @@ document.addEventListener("click", (e) => {
     }
 });
 
-
-
-tabs.forEach(tab=>{
-    tab.addEventListener("click",()=>{
-
-        tabs.forEach(btn=>btn.classList.remove("active"));
-        tab.classList.add("active");
-
-        if(tab.dataset.tab==="trending"){
-            movieTabs.classList.remove("liked");
-            showTrending();
-        }
-        else{
-            movieTabs.classList.add("liked");
-            showLiked();
-        }
-    });
-});
-
-
-
-trendingWrapper.classList.add("active");
-likedWrapper.classList.remove("active");
-
-function showTrending() {
-    trendingWrapper.classList.add("active");
-    likedWrapper.classList.remove("active");
-}
-
-function showLiked() {
-    likedWrapper.classList.add("active");
-    trendingWrapper.classList.remove("active");
-}
-
 function enterSearchMode(query){
 
     isSearching = true;
@@ -400,11 +412,18 @@ function resetHome(){
 
     searchInput.value = "";
 
+    isBrowsing = false;
+
+    browseWrapper.classList.add("hidden");
+    searchWrapper.classList.add("hidden");
+
+    homeContent.classList.remove("hidden");
+
     exitSearchMode();
 
     displayMovies(trendingMovies, trendingRow);
 
-    displayMovies(browseMovies, browseGrid);
+    displayMovies(popularMovies, popularRow);
 
 }
 
@@ -414,28 +433,50 @@ logoBtn.addEventListener("click", (e) => {
 });
 
 function renderAllRows(){
+    console.log("Trending:", trendingMovies.length);
+    console.log("Popular:", popularMovies.length);
 
     displayMovies(trendingMovies, trendingRow);
 
-    displayMovies(browseMovies, browseGrid);
+    displayMovies(popularMovies, popularRow);
 
     renderLikedMovies();
 
 }
 
+const switcher = document.querySelector(".segmented-control");
+const buttons = switcher.querySelectorAll("button");
+const slider = switcher.querySelector(".slider");
+
+const windows = ["day", "week"];
+
+buttons.forEach((btn, index) => {
+    btn.addEventListener("click", async () => {
+
+        buttons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        slider.style.transform = `translateX(${index * 100}%)`;
+
+        const endpoint = getMoviesEndpoint(
+            "trending",
+            windows[index]
+        );
+
+        await fetchMovies(endpoint, ".trending-row");
+    });
+});
 
 async function init() {
 
     await fetchGenres();
 
-    // Trending carousel
-    await fetchMovies("/movie/popular", ".trending-carausel");
+      await fetchMovies(getMoviesEndpoint("trending","day"), ".trending-row");
 
-    // Browse grid
-    await fetchMovies(
-    `/movie/now_playing?page=${currentBrowsePage}`,
-    ".browse-grid"
-);
+      await fetchMovies(
+        "/discover/movie?with_watch_monetization_types=flatrate",
+        ".popular-row"
+    );  
 
     renderLikedMovies();
 
@@ -443,4 +484,108 @@ async function init() {
 }
 
 init();
-  
+
+<!-- Navbar Buttons functionality -->
+
+
+async function enterBrowseMode(title, endpoint) {
+
+    isBrowsing = true;
+
+    homeContent.classList.add("hidden");
+    searchWrapper.classList.add("hidden");
+    browseWrapper.classList.remove("hidden");
+
+    browseTitle.textContent = title;
+
+    currentBrowseEndpoint = endpoint;
+    currentBrowsePage = 1;
+
+    browseGrid.innerHTML = "";
+
+    window.scrollTo({
+      top: 0,
+      behavior: "instant"
+    });
+
+    await loadBrowsePage();
+}
+
+async function loadBrowsePage() {
+
+    if (isLoading) return;
+
+    isLoading = true;
+
+    const separator = currentBrowseEndpoint.includes("?") ? "&" : "?";
+
+    const endpoint =
+        `${currentBrowseEndpoint}${separator}page=${currentBrowsePage}`;
+
+    await fetchMovies(endpoint, ".browse-grid", true);
+
+    currentBrowsePage++;
+
+    isLoading = false;
+}
+
+function appendMovies(movies, movieRow) {
+
+  movies.forEach(movie => {
+    movieRow.appendChild(
+      createMovieCard(movie)
+    );
+  });
+
+}
+
+let scrollTimeout;
+
+window.addEventListener("scroll", () => {
+
+    if (!isBrowsing || isLoading) return;
+
+    clearTimeout(scrollTimeout);
+
+    scrollTimeout = setTimeout(() => {
+
+        if (
+            window.innerHeight + window.scrollY >=
+            document.body.offsetHeight - 600
+        ) {
+            loadBrowsePage();
+        }
+
+    }, 200);
+
+});
+
+document.querySelectorAll("[data-browse]").forEach(link => {
+
+    link.addEventListener("click", e => {
+
+        e.preventDefault();
+
+        enterBrowseMode(
+            link.textContent.trim(),
+            link.dataset.browse
+        );
+
+    });
+
+});
+
+document.querySelectorAll("[data-genre]").forEach(link => {
+
+    link.addEventListener("click", e => {
+
+        e.preventDefault();
+
+        enterBrowseMode(
+            link.textContent.trim(),
+            `/discover/movie?with_genres=${link.dataset.genre}`
+        );
+
+    });
+
+});

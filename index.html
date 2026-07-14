@@ -6,10 +6,8 @@
     <title>MovieFlakes</title>
 
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="infinite.css">
 
     <script src="script.js" defer></script>
-    <script src="js/infinite.js" defer></script>
 </head>
 <body>
 
@@ -31,25 +29,27 @@
 
         <nav class="navbar-desktop">
             <ul>
-                <li id="movies"><a href="#movies">Movies</a></li>
-                <li id="series"><a href="#series">Series</a></li>
-                <li id="popular"><a href="#popular">Popular</a></li>
-                <li id="top-rated"><a href="#toprated">Top Rated</a></li>
-                <li id="now-playing"><a href="#nowplaying">Now Playing</a></li>
+                <li id="popular"><a href="#" data-browse="/movie/popular">Popular</a></li>
+                <li id="top-rated"><a href="#" data-browse="/movie/top_rated">Top Rated</a></li>
+                <li id="now-playing"><a href="#" data-browse="/movie/now_playing">Now Playing</a></li>
+                <li>
+                    <a href="#" data-browse="/movie/upcoming">
+                        Upcoming
+                    </a>
+                </li>
 
                 <li>
                     <div class="dropdown">
 
                         <button class="dropdown-btn">
                             Genres
-                            <span class="drop-icon">🔰</span>
+                            <span class="drop-icon">▼</span>
                         </button>
 
                         <ul class="dropdown-menu">
-                            <li id="action"><a href="#action">Action</a></li>
-                            <li id="drama"><a href="#drama">Drama</a></li>
-                            <li id="romance"><a href="#romance">Romance</a></li>
-                            <li id="thriller"><a href="#thriller">Thriller</a></li>
+                            <li id="action"><a href="#" data-genre="28">Action</a></li>
+                            <li id="drama"><a href="#" data-genre="18">Drama</a></li>
+                            <li id="romance"><a href="#" data-genre="10749">Romance</a></li>
                         </ul>
 
                     </div>
@@ -62,20 +62,30 @@
 
         <nav class="navbar-mobile">
             <ul>
+                <li id="popular"><a href="#" data-browse="/movie/popular">Popular</a></li>
+                <li id="top-rated"><a href="#" data-browse="/movie/top_rated">Top Rated</a></li>
+                <li id="now-playing"><a href="#" data-browse="/movie/now_playing">Now Playing</a></li>
+                <li>
+                    <a href="#" data-browse="/movie/upcoming">
+                        Upcoming
+                    </a>
+                </li>
 
-                <li id="movies"><a href="#movies">Movies</a></li>
-                <li id="series"><a href="#series">Series</a></li>
-                <li id="popular"><a href="#popular">Popular</a></li>
-                <li id="top-rated"><a href="#toprated">Top Rated</a></li>
-                <li id="now-playing"><a href="#nowplaying">Now Playing</a></li>
+                <li>
+                    <div class="dropdown">
 
-                <li class="sub-menu">
-                    <ul>
-                        <li id="action"><a href="#action">Action</a></li>
-                        <li id="drama"><a href="#drama">Drama</a></li>
-                        <li id="romance"><a href="#romance">Romance</a></li>
-                        <li id="thriller"><a href="#thriller">Thriller</a></li>
-                    </ul>
+                        <button class="dropdown-btn">
+                            Genres
+                            <span class="drop-icon">▼</span>
+                        </button>
+
+                        <ul class="dropdown-menu">
+                            <li id="action"><a href="#" data-genre="28">Action</a></li>
+                            <li id="drama"><a href="#" data-genre="18">Drama</a></li>
+                            <li id="romance"><a href="#" data-genre="10749">Romance</a></li>
+                        </ul>
+
+                    </div>
                 </li>
 
             </ul>
@@ -101,31 +111,30 @@
 
     <main class="home-content">
 
-        <!-- Movie Tabs -->
-
-        <div class="movie-tabs">
-
-            <button class="tab-btn active" data-tab="trending">
-                🔥 Trending
-            </button>
-
-            <button class="tab-btn" data-tab="liked">
-                ❤️ Liked
-            </button>
-
-            <div class="tab-indicator"></div>
-
-        </div>
-
         <!-- Trending -->
 
-        <section class="trending-wrapper">
+        <section class="carousel-section trending-wrapper">
+            <div class="section-header">
+                <h2>Trending</h2>
+
+                <div class="segmented-control" style="--tabs:2">
+
+                    <div class="slider"></div>
+
+                    <button class="active" data-endpoint="/trending/movie/day">
+                        Today
+                    </button>
+                    <button data-endpoint="/trending/movie/week">
+                        This Week
+                    </button>                    
+                </div>
+            </div>
 
             <button class="scroll-btn prev-btn">
                 &#10094;
             </button>
 
-            <div class="trending-carausel"></div>
+            <div class="movie-row trending-row"></div>
 
             <button class="scroll-btn next-btn">
                 &#10095;
@@ -133,37 +142,58 @@
 
         </section>
 
-        <!-- Liked -->
+        <!-- Infinite Browse Section -->
 
-        <section class="liked-wrapper">
+        <section class="carousel-section popular-wrapper">
 
-            <button class="scroll-btn liked-prev-btn">
+            <div class="section-header">
+                <h2>What's Popular</h2>
+
+                <div class="segmented-control" style="--tabs:3">
+
+                    <div class="slider"></div> 
+
+                    <button
+                        class="active"
+                        data-endpoint="/discover/movie?with_watch_monetization_types=flatrate">
+                        Streaming
+                    </button>
+
+                    <button
+                        data-endpoint="/tv/popular">
+                        On TV
+                    </button>
+
+                    <button
+                       data-endpoint="/movie/now_playing">
+                        In Theaters
+                    </button>
+                </div>
+            </div>
+
+            <button class="scroll-btn prev">
                 &#10094;
             </button>
-
-            <div class="liked-row"></div>
-
-            <button class="scroll-btn liked-next-btn">
+        
+            <div class="movie-row popular-row"></div>
+        
+            <button class="scroll-btn next">
                 &#10095;
             </button>
 
         </section>
 
-        <!-- Infinite Browse Section -->
+        <section class="carousel-section liked-wrapper">
 
-        <section class="movie-library">
-
-            <h2 class="library-title">
-                🎬 Browse Movies
-            </h2>
-
-            <div class="browse-grid"></div>
-
-            <div id="scroll-sentinel">
-
-                <div class="loader"></div>
-
+            <div class="section-header">
+        <h2>❤️ Watchlist</h2>
             </div>
+        
+                <button class="scroll-btn prev">&#10094;</button>
+
+                <div class="movie-row liked-row"></div>
+
+                <button class="scroll-btn next">&#10095;</button>
 
         </section>
 
@@ -179,6 +209,14 @@
         <h2 id="section-title" class="search-title"></h2>
 
         <div class="search-grid"></div>
+
+    </section>
+
+    <section class="browse-wrapper hidden">
+
+        <h2 id="browse-title"></h2>
+
+        <div class="browse-grid"></div>
 
     </section>
 
