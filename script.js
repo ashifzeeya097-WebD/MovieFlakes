@@ -128,6 +128,8 @@ async function fetchGenres() {
 
 async function searchMovies(query){
 
+
+
     const endpoint =
         `/search/movie?query=${encodeURIComponent(query)}`;
 
@@ -165,14 +167,7 @@ searchInput.addEventListener("input", () => {
 
 });
 
-function showLoader(movieRow) {
-    movieRow.innerHTML = `
-        <div class="loader-container">
-            <div class="loader"></div>
-            <p>Loading movies...</p>
-        </div>
-    `;
-}
+
 
 async function fetchMovies(endpoint, rowSelector = ".trending-row", append=false ) {
   
@@ -183,8 +178,16 @@ async function fetchMovies(endpoint, rowSelector = ".trending-row", append=false
   }
 
   if (!append) {
-    showLoader(movieRow);
-  }
+    
+    const skeletonCount =
+        rowSelector === ".browse-grid" ||
+        rowSelector === ".search-grid"
+            ? 12
+            : 8;
+
+    showLoader(movieRow, skeletonCount);
+    
+}
 
   const separator = endpoint.includes("?") ? "&" : "?";
   const url = `${BASE_URL}${endpoint}${separator}api_key=${API_KEY}`;

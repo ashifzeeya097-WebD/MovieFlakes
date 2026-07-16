@@ -6,7 +6,7 @@
     <title>MovieFlakes</title>
 
     <link rel="stylesheet" href="style.css">
-
+    <script src="skeleton.js" defer></script>
     <script src="script.js" defer></script>
 </head>
 <body>
@@ -120,7 +120,7 @@
                 <div class="segmented-control" style="--tabs:2">
 
                     <div class="slider"></div>
-
+                        
                     <button class="active" data-endpoint="/trending/movie/day">
                         Today
                     </button>
@@ -130,19 +130,19 @@
                 </div>
             </div>
 
-            <button class="scroll-btn prev-btn">
-                &#10094;
-            </button>
+            <div class="carousel-container">
+                <button class="scroll-btn prev-btn">
+                    &#10094;
+                </button>
 
-            <div class="movie-row trending-row"></div>
+                <div class="movie-row trending-row"></div>
 
-            <button class="scroll-btn next-btn">
-                &#10095;
-            </button>
+                <button class="scroll-btn next-btn">
+                    &#10095;
+                </button>
+            </div>
 
         </section>
-
-        <!-- Infinite Browse Section -->
 
         <section class="carousel-section popular-wrapper">
 
@@ -171,15 +171,18 @@
                 </div>
             </div>
 
-            <button class="scroll-btn prev">
-                &#10094;
-            </button>
+            <div class="carousel-container">
+                <button class="scroll-btn prev">
+                    &#10094;
+                </button>
         
-            <div class="movie-row popular-row"></div>
+                <div class="movie-row popular-row"></div>
         
-            <button class="scroll-btn next">
-                &#10095;
-            </button>
+                <button class="scroll-btn next">
+                     &#10095;
+                </button>
+            </div>
+    
 
         </section>
 
@@ -189,11 +192,13 @@
         <h2>❤️ Watchlist</h2>
             </div>
         
-                <button class="scroll-btn prev">&#10094;</button>
+                <div class="carousel-container">
+                    <button class="scroll-btn prev">&#10094;</button>
 
-                <div class="movie-row liked-row"></div>
+                    <div class="movie-row liked-row"></div>
 
-                <button class="scroll-btn next">&#10095;</button>
+                    <button class="scroll-btn next">&#10095;</button>
+                </div>
 
         </section>
 

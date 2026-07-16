@@ -383,6 +383,10 @@ nav a{
     scrollbar-width:none;
 }
 
+.carousel-container{
+    position: relative;
+}
+
 .scroll-btn {
     position: absolute;
     top: 50%;
@@ -630,7 +634,7 @@ nav a{
    MOBILE VIEW
 =========================== */
 
-@media (max-width:650px){
+@media (max-width:768px){
 
     .header{
         grid-template-columns: 1fr auto;
@@ -792,6 +796,10 @@ nav a{
     .segmented-control .slider{
         width: calc((100% - 4px) / var(--tabs));
     }
+
+    .carousel-section .scroll-btn {
+        display: none;
+    }
 }
 
 @media (max-width: 480px){
@@ -807,6 +815,10 @@ nav a{
     .segmented-control button{
         padding: .45rem .35rem;
         font-size: .72rem;
+    }
+
+    .carousel-section .scroll-btn {
+        display: none;
     }
 
 }
@@ -954,3 +966,85 @@ nav a{
 
 }
 
+/* ===========================
+   Skeleton Cards
+=========================== */
+
+.skeleton-card{
+    flex:0 0 200px;
+    max-width:200px;
+    height:300px;
+
+    border-radius:10px;
+    overflow:hidden;
+
+    background:#0d3556;
+    position:relative;
+}
+
+.skeleton-poster{
+    width:100%;
+    height:100%;
+    background:#1b496e;
+}
+
+.skeleton-info{
+    position:absolute;
+    left:12px;
+    right:12px;
+    bottom:12px;
+}
+
+.skeleton-title,
+.skeleton-details span{
+    background:#2b5b7e;
+    border-radius:4px;
+}
+
+.skeleton-title{
+    height:18px;
+    width:80%;
+    margin:0 auto 12px;
+}
+
+.skeleton-details{
+    display:flex;
+    justify-content:space-between;
+}
+
+.skeleton-details span{
+    width:48px;
+    height:12px;
+}
+
+.skeleton-poster,
+.skeleton-title,
+.skeleton-details span{
+    position:relative;
+    overflow:hidden;
+}
+
+.skeleton-poster::after,
+.skeleton-title::after,
+.skeleton-details span::after{
+    content:"";
+    position:absolute;
+    inset:0;
+
+    transform:translateX(-100%);
+
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.15),
+        transparent
+    );
+
+    animation:skeleton-shimmer 1.2s infinite;
+}
+
+@keyframes skeleton-shimmer{
+    100%{
+        transform:translateX(100%);
+    }
+}
