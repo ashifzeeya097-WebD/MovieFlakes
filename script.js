@@ -186,8 +186,9 @@ async function fetchMovies(endpoint, rowSelector = ".trending-row", append=false
             : 8;
 
     showLoader(movieRow, skeletonCount);
-    
-}
+
+
+  }
 
   const separator = endpoint.includes("?") ? "&" : "?";
   const url = `${BASE_URL}${endpoint}${separator}api_key=${API_KEY}`;
@@ -224,8 +225,11 @@ async function fetchMovies(endpoint, rowSelector = ".trending-row", append=false
     console.error("Error fetching movies:", error, url);
   }
 }
+
 function displayMovies(movies, movieRow) {
   if (!movieRow) return;
+
+  
 
   movieRow.innerHTML = "";
 
@@ -240,6 +244,7 @@ function displayMovies(movies, movieRow) {
   movies.forEach((movie) => {
     movieRow.appendChild(createMovieCard(movie));
   });
+
 }
 
 function createMovieCard(movie) {
@@ -436,8 +441,6 @@ logoBtn.addEventListener("click", (e) => {
 });
 
 function renderAllRows(){
-    console.log("Trending:", trendingMovies.length);
-    console.log("Popular:", popularMovies.length);
 
     displayMovies(trendingMovies, trendingRow);
 
@@ -504,8 +507,6 @@ async function enterBrowseMode(title, endpoint) {
     currentBrowseEndpoint = endpoint;
     currentBrowsePage = 1;
 
-    browseGrid.innerHTML = "";
-
     window.scrollTo({
       top: 0,
       behavior: "instant"
@@ -525,7 +526,7 @@ async function loadBrowsePage() {
     const endpoint =
         `${currentBrowseEndpoint}${separator}page=${currentBrowsePage}`;
 
-    await fetchMovies(endpoint, ".browse-grid", true);
+    await fetchMovies(endpoint, ".browse-grid", false);
 
     currentBrowsePage++;
 
