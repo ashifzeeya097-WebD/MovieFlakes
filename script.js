@@ -294,9 +294,13 @@ function createMovieCard(movie) {
     </div>
 `;
 
-  const likeButton = movieCard.querySelector(".like-btn");
+    movieCard.addEventListener("click", () => {
+      fetchMovieDetails(movie.id);
+    });
 
-  likeButton.addEventListener("click", (event) => {
+    const likeButton = movieCard.querySelector(".like-btn");
+
+    likeButton.addEventListener("click", (event) => {
     event.stopPropagation();
 
     state.liked = !state.liked;
