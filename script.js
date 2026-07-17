@@ -20,6 +20,7 @@ const trendingWrapper = document.querySelector(".trending-wrapper");
 const dropBtn = document.querySelector(".dropdown-btn");
 const menu = document.querySelector(".dropdown-menu");
 const logoBtn = document.querySelector(".title");
+const loadMoreBtn = document.querySelector(".load-more-btn");
 
 const homeContent = document.querySelector(".home-content");
 const searchWrapper = document.querySelector(".search-wrapper");
@@ -36,6 +37,7 @@ let currentBrowseEndpoint = "";
 let currentBrowsePage = 1;
 let isBrowsing = false;
 let isLoading = false;
+let totalBrowsePages = 1;
 
 let isSearching = false;
 let searchTimeout;
@@ -126,15 +128,21 @@ async function fetchGenres() {
     });
 }
 
-async function searchMovies(query){
-
-
+async function searchMovies(query, append = false) {
 
     const endpoint =
-        `/search/movie?query=${encodeURIComponent(query)}`;
+        `/search/movie?query=${encodeURIComponent(query)}&page=${currentSearchPage}`;
 
-    await fetchMovies(endpoint, ".search-grid");
+    const data = await fetchMovies(endpoint, ".search-grid", append);
 
+    totalSearchPages = data.total_pages;
+
+    document
+        .querySelector(".load-more-btn")
+        .classList.toggle(
+            "hidden",
+            currentSearchPage >= totalSearchPages
+        );
 }
 
 searchInput.addEventListener("input", () => {
@@ -204,7 +212,7 @@ async function fetchMovies(endpoint, rowSelector = ".trending-row", append=false
     const movies = Array.isArray(data.results) ? data.results : [];
 
     if (rowSelector === ".trending-row") {
-    trendingMovies = movies;
+        trendingMovies = movies;
     }
 
     if (rowSelector === ".popular-row") {
@@ -212,7 +220,9 @@ async function fetchMovies(endpoint, rowSelector = ".trending-row", append=false
     }
 
     if (rowSelector === ".search-grid") {
-        searchMoviesList = movies;
+        searchMoviesList = append
+        ? [...searchMoviesList, ...movies]
+        : movies;
     }
   
     if (append) {
@@ -220,6 +230,8 @@ async function fetchMovies(endpoint, rowSelector = ".trending-row", append=false
     } else {
       displayMovies(movies, movieRow);
     }
+
+    return data;
 
   } catch (error) {
     console.error("Error fetching movies:", error, url);
@@ -262,25 +274,40 @@ function createMovieCard(movie) {
 
   movieCard.innerHTML = `
     <div class="movie-actions">
-            <button class="icon-btn like-btn ${state.liked ? "active liked" : "liked"}" title="${state.liked ? "Remove like" : "Like"}">${state.liked ? "❤️" : "🤍"}</button>
+        <button
+            class="icon-btn like-btn ${state.liked ? "active liked" : "liked"}"
+            title="${state.liked ? "Remove from Watchlist" : "Add to Watchlist"}">
+            ${state.liked ? "❤️" : "🤍"}
+        </button>
     </div>
+
     <img src="${posterPath}" alt="${movie.title || "Movie Poster"}" />
+
     <div class="movie-info">
-      <h3 class="movie-title">${movie.title || movie.name || "Untitled"}</h3>
-      <div class="details">
-        <span>${genre}</span>
-        <span>${releaseYear}</span>
-        <span>⭐ ${movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"}</span>
-      </div>
+        <h3 class="movie-title">${movie.title || movie.name || "Untitled"}</h3>
+
+        <div class="details">
+            <span>${genre}</span>
+            <span>${releaseYear}</span>
+            <span>⭐ ${movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"}</span>
+        </div>
     </div>
-  `;
+`;
 
   const likeButton = movieCard.querySelector(".like-btn");
 
   likeButton.addEventListener("click", (event) => {
     event.stopPropagation();
-    updateMovieState(movie, { liked: !state.liked });
-    renderAllRows();
+
+    state.liked = !state.liked;
+
+    updateMovieState(movie, { liked: state.liked });
+
+    likeButton.classList.toggle("active", state.liked);
+    likeButton.textContent = state.liked ? "❤️" : "🤍";
+    likeButton.title = state.liked ? "Remove from Watchlist" : "Add to Watchlist";
+
+    renderLikedMovies();
   });
 
   return movieCard;
@@ -389,10 +416,14 @@ document.addEventListener("click", (e) => {
     }
 });
 
-function enterSearchMode(query){
+async function enterSearchMode(query){
 
     isSearching = true;
+    isBrowsing = false;
+    currentSearchQuery = query;
+    currentSearchPage = 1;
 
+    browseWrapper.classList.add("hidden");
     homeContent.classList.add("hidden");
     searchWrapper.classList.remove("hidden");
 
@@ -405,12 +436,26 @@ function enterSearchMode(query){
 
 }
 
+loadMoreBtn.addEventListener("click", async () => {
+
+    if (currentSearchPage >= totalSearchPages) return;
+
+    currentSearchPage++;
+
+    await searchMovies(currentSearchQuery, true);
+
+});
+
 function exitSearchMode(){
 
     isSearching = false;
 
     searchWrapper.classList.add("hidden");
-    homeContent.classList.remove("hidden");
+    document.querySelector(".load-more-btn").classList.add("hidden");
+    
+    if(!isBrowsing){
+        homeContent.classList.remove("hidden");
+    }
 
     searchInput.value = "";
     searchGrid.innerHTML = "";
@@ -491,7 +536,7 @@ async function init() {
 
 init();
 
-<!-- Navbar Buttons functionality -->
+// Navbar Buttons functionality
 
 
 async function enterBrowseMode(title, endpoint) {
@@ -516,21 +561,24 @@ async function enterBrowseMode(title, endpoint) {
 }
 
 async function loadBrowsePage() {
-
     if (isLoading) return;
+    if (currentBrowsePage > totalBrowsePages) return;
 
     isLoading = true;
 
-    const separator = currentBrowseEndpoint.includes("?") ? "&" : "?";
+    try {
+        const separator = currentBrowseEndpoint.includes("?") ? "&" : "?";
 
-    const endpoint =
-        `${currentBrowseEndpoint}${separator}page=${currentBrowsePage}`;
+        const endpoint =
+            `${currentBrowseEndpoint}${separator}page=${currentBrowsePage}`;
 
-    await fetchMovies(endpoint, ".browse-grid", false);
+        const data = await fetchMovies(endpoint, ".browse-grid", true);
 
-    currentBrowsePage++;
-
-    isLoading = false;
+        totalBrowsePages = data.total_pages;
+        currentBrowsePage++;
+    } finally {
+        isLoading = false;
+    }
 }
 
 function appendMovies(movies, movieRow) {
