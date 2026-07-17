@@ -7,8 +7,12 @@
 
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="modal.css">
+    <link rel="stylesheet" href="browse.css">
+    <link rel="stylesheet" href="search.css">
     
     <script src="modal.js" defer></script>
+    <script src="browse.js" defer></script>
+    <script src="search.js" defer></script>
     <script src="skeleton.js" defer></script>
     <script src="script.js" defer></script>
 </head>
@@ -99,12 +103,19 @@
     <!-- ================= SEARCH ================= -->
 
     <div class="search-container">
-        <input
+        <div class="search-box">
+            <input
             type="text"
             class="search-input"
             id="inputText"
             placeholder="Search for movies..."
-        >
+            >
+
+            <button class="clear-search-btn hidden" aria-label="Clear search">
+                ✕
+            </button>
+        </div>
+        
     </div>
 
     <!-- ========================================================= -->
@@ -219,7 +230,7 @@
         <div class="search-grid"></div>
 
         <button class="load-more-btn hidden">
-        Show More Results
+        Load More ▼
     </button>
 
     </section>
@@ -288,6 +299,10 @@
 
     </div>
     </div>
+
+    <button class="scroll-top-btn hidden" title="Back to Top">
+        ⇧
+    </button>
 
 </body>
     <footer class="footer-container">

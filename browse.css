@@ -1,0 +1,55 @@
+.scroll-top-btn{
+
+    position:fixed;
+
+    right:24px;
+    bottom:24px;
+
+    width:52px;
+    height:52px;
+
+    border:none;
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:1.4rem;
+    font-weight:bold;
+
+    background:linear-gradient(
+        90deg,
+        var(--accent-color),
+        var(--accent2-color)
+    );
+
+    color:var(--bg-color);
+
+    cursor:pointer;
+
+    box-shadow:0 10px 25px rgba(36,212,252,.3);
+
+    transition:
+        opacity .25s ease,
+        transform .25s ease;
+
+    z-index:999;
+
+}
+
+.scroll-top-btn.hidden{
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transform:translateY(20px);
+
+}
+
+.scroll-top-btn:hover{
+
+    transform:translateY(-3px);
+
+}

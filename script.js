@@ -12,34 +12,23 @@ const nextBtn = document.querySelector(".next-btn");
 const prevBtn = document.querySelector(".prev-btn");
 const likedNextBtn = document.querySelector(".liked-next-btn");
 const likedPrevBtn = document.querySelector(".liked-prev-btn");
-const searchInput = document.querySelector(".search-input");
 
-const sectionTitle = document.querySelector("#section-title");
 const likedWrapper = document.querySelector(".liked-wrapper");
 const trendingWrapper = document.querySelector(".trending-wrapper");
 const dropBtn = document.querySelector(".dropdown-btn");
 const menu = document.querySelector(".dropdown-menu");
 const logoBtn = document.querySelector(".title");
-const loadMoreBtn = document.querySelector(".load-more-btn");
 
 const homeContent = document.querySelector(".home-content");
-const searchWrapper = document.querySelector(".search-wrapper");
-const browseGrid = document.querySelector(".browse-grid");
-const searchGrid = document.querySelector(".search-grid");
-const browseWrapper = document.querySelector(".browse-wrapper");
-const browseTitle = document.querySelector("#browse-title");
+
 
 let currentView = "trending";
 let trendingMovies = [];
 let likedMovies = [];
 
-let currentBrowseEndpoint = "";
-let currentBrowsePage = 1;
 let isBrowsing = false;
 let isLoading = false;
-let totalBrowsePages = 1;
 
-let isSearching = false;
 let searchTimeout;
 const genreMap = {};
 const appState = loadAppState();
@@ -127,54 +116,6 @@ async function fetchGenres() {
         genreMap[genre.id] = genre.name;
     });
 }
-
-async function searchMovies(query, append = false) {
-
-    const endpoint =
-        `/search/movie?query=${encodeURIComponent(query)}&page=${currentSearchPage}`;
-
-    const data = await fetchMovies(endpoint, ".search-grid", append);
-
-    totalSearchPages = data.total_pages;
-
-    document
-        .querySelector(".load-more-btn")
-        .classList.toggle(
-            "hidden",
-            currentSearchPage >= totalSearchPages
-        );
-}
-
-searchInput.addEventListener("input", () => {
-
-    const query = searchInput.value.trim();
-
-    clearTimeout(searchTimeout);
-
-    // Search cleared
-    if(query.length === 0){
-
-        exitSearchMode();
-
-        return;
-
-    }
-
-    // Wait until user types at least 3 characters
-    if(query.length < 3){
-        return;
-    }
-
-    searchTimeout = setTimeout(() => {
-
-        enterSearchMode(query);
-
-        searchMovies(query);
-
-    },500);
-
-});
-
 
 
 async function fetchMovies(endpoint, rowSelector = ".trending-row", append=false ) {
@@ -420,50 +361,6 @@ document.addEventListener("click", (e) => {
     }
 });
 
-async function enterSearchMode(query){
-
-    isSearching = true;
-    isBrowsing = false;
-    currentSearchQuery = query;
-    currentSearchPage = 1;
-
-    browseWrapper.classList.add("hidden");
-    homeContent.classList.add("hidden");
-    searchWrapper.classList.remove("hidden");
-
-    window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-    });
-
-    sectionTitle.textContent = `🔍 Search Results for "${query}"`;
-
-}
-
-loadMoreBtn.addEventListener("click", async () => {
-
-    if (currentSearchPage >= totalSearchPages) return;
-
-    currentSearchPage++;
-
-    await searchMovies(currentSearchQuery, true);
-
-});
-
-function exitSearchMode(){
-
-    isSearching = false;
-
-    searchWrapper.classList.add("hidden");
-    document.querySelector(".load-more-btn").classList.add("hidden");
-    
-    if(!isBrowsing){
-        homeContent.classList.remove("hidden");
-    }
-
-    searchInput.value = "";
-    searchGrid.innerHTML = "";
-}
 
 function resetHome(){
 
@@ -540,108 +437,15 @@ async function init() {
 
 init();
 
-// Navbar Buttons functionality
 
 
-async function enterBrowseMode(title, endpoint) {
 
-    isBrowsing = true;
 
-    homeContent.classList.add("hidden");
-    searchWrapper.classList.add("hidden");
-    browseWrapper.classList.remove("hidden");
 
-    browseTitle.textContent = title;
 
-    currentBrowseEndpoint = endpoint;
-    currentBrowsePage = 1;
 
-    window.scrollTo({
-      top: 0,
-      behavior: "instant"
-    });
 
-    await loadBrowsePage();
-}
 
-async function loadBrowsePage() {
-    if (isLoading) return;
-    if (currentBrowsePage > totalBrowsePages) return;
 
-    isLoading = true;
 
-    try {
-        const separator = currentBrowseEndpoint.includes("?") ? "&" : "?";
 
-        const endpoint =
-            `${currentBrowseEndpoint}${separator}page=${currentBrowsePage}`;
-
-        const data = await fetchMovies(endpoint, ".browse-grid", true);
-
-        totalBrowsePages = data.total_pages;
-        currentBrowsePage++;
-    } finally {
-        isLoading = false;
-    }
-}
-
-function appendMovies(movies, movieRow) {
-
-  movies.forEach(movie => {
-    movieRow.appendChild(
-      createMovieCard(movie)
-    );
-  });
-
-}
-
-let scrollTimeout;
-
-window.addEventListener("scroll", () => {
-
-    if (!isBrowsing || isLoading) return;
-
-    clearTimeout(scrollTimeout);
-
-    scrollTimeout = setTimeout(() => {
-
-        if (
-            window.innerHeight + window.scrollY >=
-            document.body.offsetHeight - 600
-        ) {
-            loadBrowsePage();
-        }
-
-    }, 200);
-
-});
-
-document.querySelectorAll("[data-browse]").forEach(link => {
-
-    link.addEventListener("click", e => {
-
-        e.preventDefault();
-
-        enterBrowseMode(
-            link.textContent.trim(),
-            link.dataset.browse
-        );
-
-    });
-
-});
-
-document.querySelectorAll("[data-genre]").forEach(link => {
-
-    link.addEventListener("click", e => {
-
-        e.preventDefault();
-
-        enterBrowseMode(
-            link.textContent.trim(),
-            `/discover/movie?with_genres=${link.dataset.genre}`
-        );
-
-    });
-
-});
