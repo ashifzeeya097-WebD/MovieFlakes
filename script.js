@@ -21,7 +21,6 @@ const logoBtn = document.querySelector(".title");
 
 const homeContent = document.querySelector(".home-content");
 
-
 let currentView = "trending";
 let trendingMovies = [];
 let likedMovies = [];
@@ -35,7 +34,7 @@ const appState = loadAppState();
 
 function createEmptyState() {
   return {
-    liked: {}
+    liked: {},
   };
 }
 
@@ -47,7 +46,7 @@ function loadAppState() {
     }
 
     return {
-      liked: stored.liked || {}
+      liked: stored.liked || {},
     };
   } catch (error) {
     console.warn("Failed to load saved movie state:", error);
@@ -61,7 +60,7 @@ function saveAppState() {
 
 function getMovieState(movieId) {
   return {
-    liked: !!appState.liked[movieId]
+    liked: !!appState.liked[movieId],
   };
 }
 
@@ -101,25 +100,25 @@ function getMoviesEndpoint(category, timeWindow = "day") {
   }
 }
 
-
-
 async function fetchGenres() {
-    const [movieRes, tvRes] = await Promise.all([
-        fetch(`${BASE_URL}/genre/movie/list?api_key=${API_KEY}`),
-        fetch(`${BASE_URL}/genre/tv/list?api_key=${API_KEY}`)
-    ]);
+  const [movieRes, tvRes] = await Promise.all([
+    fetch(`${BASE_URL}/genre/movie/list?api_key=${API_KEY}`),
+    fetch(`${BASE_URL}/genre/tv/list?api_key=${API_KEY}`),
+  ]);
 
-    const movieData = await movieRes.json();
-    const tvData = await tvRes.json();
+  const movieData = await movieRes.json();
+  const tvData = await tvRes.json();
 
-    [...movieData.genres, ...tvData.genres].forEach(genre => {
-        genreMap[genre.id] = genre.name;
-    });
+  [...movieData.genres, ...tvData.genres].forEach((genre) => {
+    genreMap[genre.id] = genre.name;
+  });
 }
 
-
-async function fetchMovies(endpoint, rowSelector = ".trending-row", append=false ) {
-  
+async function fetchMovies(
+  endpoint,
+  rowSelector = ".trending-row",
+  append = false,
+) {
   const movieRow = document.querySelector(rowSelector);
   if (!movieRow) {
     console.error("Movie row selector not found:", rowSelector);
@@ -127,16 +126,10 @@ async function fetchMovies(endpoint, rowSelector = ".trending-row", append=false
   }
 
   if (!append) {
-    
     const skeletonCount =
-        rowSelector === ".browse-grid" ||
-        rowSelector === ".search-grid"
-            ? 12
-            : 8;
+      rowSelector === ".browse-grid" || rowSelector === ".search-grid" ? 12 : 8;
 
     showLoader(movieRow, skeletonCount);
-
-
   }
 
   const separator = endpoint.includes("?") ? "&" : "?";
@@ -145,7 +138,12 @@ async function fetchMovies(endpoint, rowSelector = ".trending-row", append=false
   try {
     const response = await fetch(url);
     if (!response.ok) {
-      console.error("Failed to fetch movies:", response.status, response.statusText, url);
+      console.error(
+        "Failed to fetch movies:",
+        response.status,
+        response.statusText,
+        url,
+      );
       return;
     }
 
@@ -153,19 +151,17 @@ async function fetchMovies(endpoint, rowSelector = ".trending-row", append=false
     const movies = Array.isArray(data.results) ? data.results : [];
 
     if (rowSelector === ".trending-row") {
-        trendingMovies = movies;
+      trendingMovies = movies;
     }
 
     if (rowSelector === ".popular-row") {
-        popularMovies = movies;
+      popularMovies = movies;
     }
 
     if (rowSelector === ".search-grid") {
-        searchMoviesList = append
-        ? [...searchMoviesList, ...movies]
-        : movies;
+      searchMoviesList = append ? [...searchMoviesList, ...movies] : movies;
     }
-  
+
     if (append) {
       appendMovies(movies, movieRow);
     } else {
@@ -173,7 +169,6 @@ async function fetchMovies(endpoint, rowSelector = ".trending-row", append=false
     }
 
     return data;
-
   } catch (error) {
     console.error("Error fetching movies:", error, url);
   }
@@ -181,8 +176,6 @@ async function fetchMovies(endpoint, rowSelector = ".trending-row", append=false
 
 function displayMovies(movies, movieRow) {
   if (!movieRow) return;
-
-  
 
   movieRow.innerHTML = "";
 
@@ -197,7 +190,6 @@ function displayMovies(movies, movieRow) {
   movies.forEach((movie) => {
     movieRow.appendChild(createMovieCard(movie));
   });
-
 }
 
 function createMovieCard(movie) {
@@ -207,9 +199,7 @@ function createMovieCard(movie) {
     : " ";
   const releaseDate = movie.release_date || movie.first_air_date;
   const releaseYear = releaseDate ? releaseDate.slice(0, 4) : "N/A";
-  const genre = movie.genre_ids?.length
-    ? genreMap[movie.genre_ids[0]]
-    : "N/A";
+  const genre = movie.genre_ids?.length ? genreMap[movie.genre_ids[0]] : "N/A";
   const movieCard = document.createElement("div");
   movieCard.classList.add("movie-card");
 
@@ -235,13 +225,13 @@ function createMovieCard(movie) {
     </div>
 `;
 
-    movieCard.addEventListener("click", () => {
-      fetchMovieDetails(movie.id);
-    });
+  movieCard.addEventListener("click", () => {
+    fetchMovieDetails(movie.id);
+  });
 
-    const likeButton = movieCard.querySelector(".like-btn");
+  const likeButton = movieCard.querySelector(".like-btn");
 
-    likeButton.addEventListener("click", (event) => {
+  likeButton.addEventListener("click", (event) => {
     event.stopPropagation();
 
     state.liked = !state.liked;
@@ -250,7 +240,9 @@ function createMovieCard(movie) {
 
     likeButton.classList.toggle("active", state.liked);
     likeButton.textContent = state.liked ? "❤️" : "🤍";
-    likeButton.title = state.liked ? "Remove from Watchlist" : "Add to Watchlist";
+    likeButton.title = state.liked
+      ? "Remove from Watchlist"
+      : "Add to Watchlist";
 
     renderLikedMovies();
   });
@@ -265,135 +257,114 @@ function renderLikedMovies() {
 
 renderLikedMovies();
 
-document.querySelectorAll(".carousel-section").forEach(section => {
+document.querySelectorAll(".carousel-section").forEach((section) => {
+  const prevBtn = section.querySelector(".prev, .prev-btn");
+  const nextBtn = section.querySelector(".next, .next-btn");
+  const row = section.querySelector(".movie-row");
 
-    const prevBtn = section.querySelector(".prev, .prev-btn");
-    const nextBtn = section.querySelector(".next, .next-btn");
-    const row = section.querySelector(".movie-row");
+  if (!row) return;
 
-    if (!row) return;
-
-    prevBtn?.addEventListener("click", () => {
-        row.scrollBy({
-            left: -500,
-            behavior: "smooth"
-        });
+  prevBtn?.addEventListener("click", () => {
+    row.scrollBy({
+      left: -500,
+      behavior: "smooth",
     });
+  });
 
-    nextBtn?.addEventListener("click", () => {
-        row.scrollBy({
-            left: 500,
-            behavior: "smooth"
-        });
+  nextBtn?.addEventListener("click", () => {
+    row.scrollBy({
+      left: 500,
+      behavior: "smooth",
     });
-
+  });
 });
 
-document.querySelectorAll(".segmented-control").forEach(control => {
+document.querySelectorAll(".segmented-control").forEach((control) => {
+  const buttons = control.querySelectorAll("button");
+  const slider = control.querySelector(".slider");
 
-    const buttons = control.querySelectorAll("button");
-    const slider = control.querySelector(".slider");
+  buttons.forEach((button, index) => {
+    button.addEventListener("click", async () => {
+      buttons.forEach((btn) => btn.classList.remove("active"));
+      button.classList.add("active");
+      if (slider) {
+        slider.style.transform = `translateX(${index * 100}%)`;
+      }
 
-    buttons.forEach((button, index) => {
+      const endpoint = button.dataset.endpoint;
 
-        button.addEventListener("click", async () => {
+      const section = control.closest(".carousel-section");
 
-            buttons.forEach(btn => btn.classList.remove("active"));
-            button.classList.add("active");
-            if(slider){
-              slider.style.transform = `translateX(${index * 100}%)`;
-            }
-            
+      let rowSelector = "";
 
-            const endpoint = button.dataset.endpoint;
+      if (section.classList.contains("trending-wrapper")) {
+        rowSelector = ".trending-row";
+      } else if (section.classList.contains("popular-wrapper")) {
+        rowSelector = ".popular-row";
+      }
 
-            const section = control.closest(".carousel-section");
-
-            let rowSelector = "";
-
-            if (section.classList.contains("trending-wrapper")) {
-                rowSelector = ".trending-row";
-            } else if (section.classList.contains("popular-wrapper")) {
-                rowSelector = ".popular-row";
-            }
-
-            if (endpoint && rowSelector) {
-                await fetchMovies(endpoint, rowSelector);
-            }
-
-        });
-
+      if (endpoint && rowSelector) {
+        await fetchMovies(endpoint, rowSelector);
+      }
     });
-
+  });
 });
 
 dropBtn.addEventListener("click", () => {
   menu.classList.toggle("show");
   dropBtn.classList.toggle("active");
-
 });
 
 document.addEventListener("click", (e) => {
-    if (
-        !menu.contains(e.target) &&
-        !dropBtn.contains(e.target)
-    ) {
-        menu.classList.remove("show");
-        dropBtn.classList.remove("active");
-    }
+  if (!menu.contains(e.target) && !dropBtn.contains(e.target)) {
+    menu.classList.remove("show");
+    dropBtn.classList.remove("active");
+  }
 });
 
 const menuBtn = document.querySelector(".menu-btn");
 const mobileNav = document.querySelector(".navbar-mobile");
 menuBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
+  e.stopPropagation();
 
-    menuBtn.classList.toggle("active");
-    mobileNav.classList.toggle("show");
+  menuBtn.classList.toggle("active");
+  mobileNav.classList.toggle("show");
 });
 document.addEventListener("click", (e) => {
-    if (
-        !mobileNav.contains(e.target) &&
-        !menuBtn.contains(e.target)
-    ) {
-        mobileNav.classList.remove("show");
-        menuBtn.classList.remove("active");
-    }
+  if (!mobileNav.contains(e.target) && !menuBtn.contains(e.target)) {
+    mobileNav.classList.remove("show");
+    menuBtn.classList.remove("active");
+  }
 });
 
+function resetHome() {
+  searchInput.value = "";
 
-function resetHome(){
+  isBrowsing = false;
 
-    searchInput.value = "";
+  browseWrapper.classList.add("hidden");
+  searchWrapper.classList.add("hidden");
 
-    isBrowsing = false;
+  homeContent.classList.remove("hidden");
 
-    browseWrapper.classList.add("hidden");
-    searchWrapper.classList.add("hidden");
+  exitSearchMode();
 
-    homeContent.classList.remove("hidden");
+  displayMovies(trendingMovies, trendingRow);
 
-    exitSearchMode();
-
-    displayMovies(trendingMovies, trendingRow);
-
-    displayMovies(popularMovies, popularRow);
-
+  displayMovies(popularMovies, popularRow);
 }
 
 logoBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    resetHome();
+  e.preventDefault();
+  resetHome();
 });
 
-function renderAllRows(){
+function renderAllRows() {
+  displayMovies(trendingMovies, trendingRow);
 
-    displayMovies(trendingMovies, trendingRow);
+  displayMovies(popularMovies, popularRow);
 
-    displayMovies(popularMovies, popularRow);
-
-    renderLikedMovies();
-
+  renderLikedMovies();
 }
 
 const switcher = document.querySelector(".segmented-control");
@@ -403,49 +374,31 @@ const slider = switcher.querySelector(".slider");
 const windows = ["day", "week"];
 
 buttons.forEach((btn, index) => {
-    btn.addEventListener("click", async () => {
+  btn.addEventListener("click", async () => {
+    buttons.forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
 
-        buttons.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
+    slider.style.transform = `translateX(${index * 100}%)`;
 
-        slider.style.transform = `translateX(${index * 100}%)`;
+    const endpoint = getMoviesEndpoint("trending", windows[index]);
 
-        const endpoint = getMoviesEndpoint(
-            "trending",
-            windows[index]
-        );
-
-        await fetchMovies(endpoint, ".trending-row");
-    });
+    await fetchMovies(endpoint, ".trending-row");
+  });
 });
 
 async function init() {
+  await fetchGenres();
 
-    await fetchGenres();
+  await fetchMovies(getMoviesEndpoint("trending", "day"), ".trending-row");
 
-      await fetchMovies(getMoviesEndpoint("trending","day"), ".trending-row");
+  await fetchMovies(
+    "/discover/movie?with_watch_monetization_types=flatrate",
+    ".popular-row",
+  );
 
-      await fetchMovies(
-        "/discover/movie?with_watch_monetization_types=flatrate",
-        ".popular-row"
-    );  
+  renderLikedMovies();
 
-    renderLikedMovies();
-
-    exitSearchMode();
+  exitSearchMode();
 }
 
 init();
-
-
-
-
-
-
-
-
-
-
-
-
-

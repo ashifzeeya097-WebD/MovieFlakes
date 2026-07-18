@@ -11,113 +11,89 @@ let currentSearchPage = 1;
 let totalSearchPages = 1;
 
 async function searchMovies(query, append = false) {
+  const endpoint = `/search/movie?query=${encodeURIComponent(query)}&page=${currentSearchPage}`;
 
-    const endpoint =
-        `/search/movie?query=${encodeURIComponent(query)}&page=${currentSearchPage}`;
+  const data = await fetchMovies(endpoint, ".search-grid", append);
 
-    const data = await fetchMovies(endpoint, ".search-grid", append);
+  totalSearchPages = data.total_pages;
 
-    totalSearchPages = data.total_pages;
-
-    loadMoreBtn.classList.toggle("hidden",
-         currentSearchPage >= totalSearchPages
-    );
+  loadMoreBtn.classList.toggle("hidden", currentSearchPage >= totalSearchPages);
 }
 
+async function enterSearchMode(query) {
+  isSearching = true;
+  isBrowsing = false;
+  currentSearchQuery = query;
+  currentSearchPage = 1;
 
-async function enterSearchMode(query){
+  browseWrapper.classList.add("hidden");
+  homeContent.classList.add("hidden");
+  searchWrapper.classList.remove("hidden");
 
-    isSearching = true;
-    isBrowsing = false;
-    currentSearchQuery = query;
-    currentSearchPage = 1;
-
-    browseWrapper.classList.add("hidden");
-    homeContent.classList.add("hidden");
-    searchWrapper.classList.remove("hidden");
-
-    window.scrollTo({
+  window.scrollTo({
     top: 0,
-    behavior: "smooth"
-    });
+    behavior: "smooth",
+  });
 
-    sectionTitle.textContent = `🔍 Search Results for "${query}"`;
-
+  sectionTitle.textContent = `🔍 Search Results for "${query}"`;
 }
 
+function exitSearchMode() {
+  isSearching = false;
 
-function exitSearchMode(){
+  searchWrapper.classList.add("hidden");
+  loadMoreBtn.classList.add("hidden");
 
-    isSearching = false;
+  if (!isBrowsing) {
+    homeContent.classList.remove("hidden");
+  }
 
-    searchWrapper.classList.add("hidden");
-    loadMoreBtn.classList.add("hidden");
-    
-    if(!isBrowsing){
-        homeContent.classList.remove("hidden");
-    }
-
-    searchInput.value = "";
-    searchGrid.innerHTML = "";
+  searchInput.value = "";
+  searchGrid.innerHTML = "";
 }
 
 searchInput.addEventListener("input", () => {
+  const query = searchInput.value.trim();
 
-    const query = searchInput.value.trim();
+  clearTimeout(searchTimeout);
 
-    clearTimeout(searchTimeout);
+  // Search cleared
+  if (query.length === 0) {
+    exitSearchMode();
 
-    // Search cleared
-    if(query.length === 0){
+    return;
+  }
 
-        exitSearchMode();
+  // Wait until user types at least 3 characters
+  if (query.length < 3) {
+    return;
+  }
 
-        return;
+  searchTimeout = setTimeout(() => {
+    enterSearchMode(query);
 
-    }
-
-    // Wait until user types at least 3 characters
-    if(query.length < 3){
-        return;
-    }
-
-    searchTimeout = setTimeout(() => {
-
-        enterSearchMode(query);
-
-        searchMovies(query);
-
-    },500);
-
+    searchMovies(query);
+  }, 500);
 });
 
 searchInput.addEventListener("input", () => {
-
-    clearSearchBtn.classList.toggle(
-        "hidden",
-        searchInput.value.trim() === ""
-    );
-
+  clearSearchBtn.classList.toggle("hidden", searchInput.value.trim() === "");
 });
 
 clearSearchBtn.addEventListener("click", () => {
+  searchInput.value = "";
 
-    searchInput.value = "";
+  exitSearchMode();
 
-    exitSearchMode();
+  clearSearchBtn.classList.add("hidden");
 
-    clearSearchBtn.classList.add("hidden");
-
-    searchInput.focus();
-
+  searchInput.focus();
 });
 
 loadMoreBtn.addEventListener("click", async () => {
+  if (currentSearchPage >= totalSearchPages) return;
 
-    if (currentSearchPage >= totalSearchPages) return;
+  currentSearchPage++;
 
-    currentSearchPage++;
-
-    await searchMovies(currentSearchQuery, true);
-
+  await searchMovies(currentSearchQuery, true);
 });
