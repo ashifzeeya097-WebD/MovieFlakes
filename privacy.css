@@ -1,0 +1,181 @@
+:root{
+
+    --bg:#032541;
+    --bg2:#031f37;
+    --accent:#24d4fc;
+    --accent2:#11facf;
+    --text:#fff;
+    --text2:rgba(255,255,255,.82);
+
+}
+
+*{
+
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Poppins,sans-serif;
+
+}
+
+body{
+
+    color:var(--text);
+
+    background:
+    linear-gradient(rgba(3,37,65,.95),rgba(3,31,55,.96)),
+    url("assets/pexels-bg4.jpg") center/cover fixed;
+
+}
+
+header{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:18px 8%;
+
+    background:var(--bg2);
+
+    position:sticky;
+    top:0;
+    z-index:1000;
+
+}
+
+.logo{
+
+    text-decoration:none;
+    color:var(--accent);
+    font-size:1.7rem;
+    font-weight:700;
+
+}
+
+.logo span{
+
+    color:var(--accent2);
+
+}
+
+.back-btn{
+
+    color:white;
+    text-decoration:none;
+
+}
+
+.hero{
+
+    text-align:center;
+    padding:70px 20px 60px;
+
+}
+
+.hero h1{
+
+    font-size:3rem;
+    margin-bottom:15px;
+
+}
+
+.hero p{
+
+    color:var(--text2);
+
+}
+
+.privacy-grid{
+
+    width:min(1100px,90%);
+    margin:auto;
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+
+    gap:25px;
+
+    padding-bottom:80px;
+
+}
+
+.policy-card{
+
+    background:rgba(255,255,255,.06);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    backdrop-filter:blur(14px);
+
+    border-radius:20px;
+
+    padding:30px;
+
+    transition:.35s;
+
+}
+
+.policy-card:hover{
+
+    transform:translateY(-8px);
+
+    border-color:var(--accent);
+
+    box-shadow:0 0 25px rgba(36,212,252,.25);
+
+}
+
+.icon{
+
+    width:70px;
+    height:70px;
+
+    border-radius:18px;
+
+    display:grid;
+    place-items:center;
+
+    font-size:2rem;
+
+    margin-bottom:20px;
+
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+
+    color:#032541;
+
+}
+
+.policy-card h2{
+
+    margin-bottom:14px;
+
+}
+
+.policy-card p{
+
+    color:var(--text2);
+
+    line-height:1.8;
+
+}
+
+footer{
+
+    text-align:center;
+
+    padding:25px;
+
+    color:rgba(255,255,255,.65);
+
+}
+
+@media(max-width:700px){
+
+.hero h1{
+
+font-size:2.3rem;
+
+}
+
+}

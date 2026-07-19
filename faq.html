@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ • MovieFlakes</title>
+
+    <link rel="stylesheet" href="faq.css">
+</head>
+
+<body>
+
+    <header>
+
+        <a href="index.html" class="logo">
+            Movie<span>Flakes</span>
+        </a>
+
+        <a href="index.html" class="back-btn">
+            ← Back Home
+        </a>
+
+    </header>
+
+    <section class="hero">
+
+        <h1>Frequently Asked Questions</h1>
+
+        <p>
+            Everything you need to know about MovieFlakes.
+        </p>
+
+    </section>
+
+    <main class="faq-container">
+
+        <div class="faq-item">
+
+            <button class="faq-question">
+
+                What is MovieFlakes?
+
+                <span>+</span>
+
+            </button>
+
+            <div class="faq-answer">
+
+                <p>
+                    MovieFlakes is a modern movie discovery web application that lets
+                    you browse trending titles, search movies, explore genres,
+                    and build a personal watchlist.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="faq-item">
+
+            <button class="faq-question">
+
+                Is MovieFlakes free?
+
+                <span>+</span>
+
+            </button>
+
+            <div class="faq-answer">
+
+                <p>
+                    Yes. MovieFlakes is completely free to use.
+                    No registration or subscription is required.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="faq-item">
+
+            <button class="faq-question">
+
+                Where does the movie data come from?
+
+                <span>+</span>
+
+            </button>
+
+            <div class="faq-answer">
+
+                <p>
+                    Movie information is provided by
+                    The Movie Database (TMDB) API.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="faq-item">
+
+            <button class="faq-question">
+
+                Does MovieFlakes store my data?
+
+                <span>+</span>
+
+            </button>
+
+            <div class="faq-answer">
+
+                <p>
+                    Only your watchlist is stored locally in your browser using
+                    Local Storage. No personal information is collected.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="faq-item">
+
+            <button class="faq-question">
+
+                Can I watch movies on MovieFlakes?
+
+                <span>+</span>
+
+            </button>
+
+            <div class="faq-answer">
+
+                <p>
+                    No. MovieFlakes is a movie discovery platform.
+                    It does not stream or host movies.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="faq-item">
+
+            <button class="faq-question">
+
+                How often is movie information updated?
+
+                <span>+</span>
+
+            </button>
+
+            <div class="faq-answer">
+
+                <p>
+                    Since MovieFlakes uses live TMDB data,
+                    new releases and trending movies are updated automatically.
+                </p>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer>
+
+        © 2026 MovieFlakes
+
+    </footer>
+
+<script>
+
+document.querySelectorAll(".faq-question").forEach(button=>{
+
+button.addEventListener("click",()=>{
+
+const item=button.parentElement;
+
+item.classList.toggle("active");
+
+});
+
+});
+
+</script>
+
+</body>
+
+</html>
