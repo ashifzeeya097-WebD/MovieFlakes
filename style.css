@@ -1080,6 +1080,13 @@ nav a {
   column-gap: 0;
 }
 
+.about, .legal-terms{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
 .footer-content h2,
 .legal h2 {
   margin: 6px;
@@ -1129,7 +1136,18 @@ nav a {
 
   .footer-content,
   .legal {
-    margin: 0;
     align-items: center;
+    gap: 10px;
+    margin: 0;
   }
+
+  .about, .legal-terms{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: row;
+    gap: 5px;
+    text-wrap: wrap;
+  }
+
 }
