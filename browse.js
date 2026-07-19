@@ -1,6 +1,8 @@
 const browseGrid = document.querySelector(".browse-grid");
 const browseWrapper = document.querySelector(".browse-wrapper");
 const browseTitle = document.querySelector("#browse-title");
+const mobileMenu = document.querySelector(".navbar-mobile");
+const menuBtn = document.querySelector(".menu-btn");
 
 const scrollTopBtn = document.querySelector(".scroll-top-btn");
 
@@ -96,6 +98,22 @@ window.addEventListener("scroll", () => {
 
 });
 
+
+menuBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+
+  menuBtn.classList.toggle("active");
+  mobileMenu.classList.toggle("show");
+
+});
+
+document.addEventListener("click", (e) => {
+  if (!mobileMenu.contains(e.target) && !menuBtn.contains(e.target)) {
+    mobileMenu.classList.remove("show");
+    menuBtn.classList.remove("active");
+  }
+});
+
 document
 .querySelectorAll("[data-browse]")
 .forEach(link => {
@@ -111,6 +129,9 @@ document
             link.dataset.browse
 
         );
+
+        mobileMenu.classList.remove("show");
+        menuBtn.classList.remove("active");
 
     });
 
@@ -131,6 +152,9 @@ document
             `/discover/movie?with_genres=${link.dataset.genre}`
 
         );
+
+        mobileMenu.classList.remove("show");
+        menuBtn.classList.remove("active");
 
     });
 

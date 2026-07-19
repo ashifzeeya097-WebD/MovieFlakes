@@ -322,20 +322,6 @@ document.addEventListener("click", (e) => {
   }
 });
 
-const menuBtn = document.querySelector(".menu-btn");
-const mobileNav = document.querySelector(".navbar-mobile");
-menuBtn.addEventListener("click", (e) => {
-  e.stopPropagation();
-
-  menuBtn.classList.toggle("active");
-  mobileNav.classList.toggle("show");
-});
-document.addEventListener("click", (e) => {
-  if (!mobileNav.contains(e.target) && !menuBtn.contains(e.target)) {
-    mobileNav.classList.remove("show");
-    menuBtn.classList.remove("active");
-  }
-});
 
 function resetHome() {
   searchInput.value = "";

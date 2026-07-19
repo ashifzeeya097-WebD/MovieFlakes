@@ -171,9 +171,8 @@ body::-webkit-scrollbar {
 
 nav {
   display: flex;
-  justify-content: flex-end;
+  justify-self: flex-end;
   align-items: center;
-  margin-right: 20px;
 }
 
 nav > ul {
@@ -227,6 +226,7 @@ nav a {
   justify-self: end;
   align-items: center;
   margin-left: auto;
+  padding-right: 20px;
 }
 
 .navbar-desktop > ul {
