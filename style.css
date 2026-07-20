@@ -1117,14 +1117,18 @@ nav a {
 
   margin: 2px 6px;
   padding: 2px 8px;
-  color: #fff;
-  transition: all 0.15s ease-in;
+  color: rgba(255, 255, 255, 0.9);
+  transition: all 0.2s ease-in;
+  border-radius: 999px;
+  padding: 4px 12px;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
 }
 
 .footer-content a:hover,
 .legal a:hover {
-  color: var(--accent2-color);
+  color: rgba(255, 255, 255, 0.9);
   transform: translateX(-2px);
+  box-shadow: 0 0 12px rgba(36, 212, 252, 0.7);
 }
 
 @media (max-width: 600px) {

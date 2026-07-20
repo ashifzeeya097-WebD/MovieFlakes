@@ -23,7 +23,7 @@
 
     <header class="header">
       <div class="title">
-        <a href="#home">Movie🎞️<span>Flakes</span></a>
+        <a href="#home">Movie🍿<span>Flakes</span></a>
       </div>
 
       <button class="menu-btn">
@@ -123,7 +123,7 @@
       <!-- Everything inside this container is hidden during search. -->
       <!-- ========================================================= -->
 
-      <main class="home-content">
+      <section class="home-content">
         <!-- Trending -->
 
         <section class="carousel-section trending-wrapper">
@@ -141,11 +141,11 @@
           </div>
 
           <div class="carousel-container">
-            <button class="scroll-btn prev-btn">&#10094;</button>
+            <button class="scroll-btn prev-btn" aria-label="Scroll left">&#10094;</button>
 
             <div class="movie-row trending-row"></div>
 
-            <button class="scroll-btn next-btn">&#10095;</button>
+            <button class="scroll-btn next-btn" aria-label="Scroll right">&#10095;</button>
           </div>
         </section>
 
@@ -156,10 +156,7 @@
             <div class="segmented-control" style="--tabs: 3">
               <div class="slider"></div>
 
-              <button
-                class="active"
-                data-endpoint="/discover/movie?with_watch_monetization_types=flatrate"
-              >
+              <button class="active" data-endpoint="/discover/movie?with_watch_monetization_types=flatrate">
                 Streaming
               </button>
 
@@ -170,11 +167,11 @@
           </div>
 
           <div class="carousel-container">
-            <button class="scroll-btn prev">&#10094;</button>
+            <button class="scroll-btn prev-btn" aria-label="Scroll left">&#10094;</button>
 
             <div class="movie-row popular-row"></div>
 
-            <button class="scroll-btn next">&#10095;</button>
+            <button class="scroll-btn next-btn" aria-label="Scroll right">&#10095;</button>
           </div>
         </section>
 
@@ -184,14 +181,14 @@
           </div>
 
           <div class="carousel-container">
-            <button class="scroll-btn prev">&#10094;</button>
+            <button class="scroll-btn prev-btn" aria-label="Scroll left">&#10094;</button>
 
             <div class="movie-row liked-row"></div>
 
-            <button class="scroll-btn next">&#10095;</button>
+            <button class="scroll-btn next-btn" aria-label="Scroll right">&#10095;</button>
           </div>
         </section>
-      </main>
+      </section>
 
       <!-- ========================================================= -->
       <!-- SEARCH CONTENT -->
@@ -214,12 +211,10 @@
 
       <div class="movie-modal hidden">
         <div class="modal-overlay"></div>
-
         <div class="modal-container">
-          <button class="modal-close">&times;</button>
-
+          <button class="modal-close" aria-label="Close modal">&times;</button>
           <div class="modal-banner">
-            <img id="modalBackdrop" alt="" />
+            <img id="modalBackdrop" alt="Movie backdrop" />
           </div>
 
           <div class="modal-body">
@@ -258,7 +253,7 @@
         </div>
       </div>
 
-      <button class="scroll-top-btn hidden" title="Back to Top">⇧</button>
+      <button class="scroll-top-btn hidden" title="Back to Top" aria-label="Scroll to top">⇧</button>
     </main>
     <footer class="footer-container">
       <div class="footer-links">
