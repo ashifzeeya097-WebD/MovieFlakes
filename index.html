@@ -53,7 +53,7 @@
             <div class="dropdown">
               <button class="dropdown-btn">
                 Genres
-                <span class="drop-icon">▼</span>
+                <span class="drop-icon">▾</span>
               </button>
 
               <ul class="dropdown-menu">
@@ -68,7 +68,7 @@
 
       <!-- Mobile Navigation -->
 
-      <nav class="navbar-mobile">
+      <nav class="navbar-mobile" role="navigation">
         <ul>
           <li id="popular">
             <a href="#" data-browse="/movie/popular">Popular</a>
@@ -85,12 +85,16 @@
 
           <li>
             <div class="dropdown">
-              <button class="dropdown-btn">
+              <button
+                class="dropdown-btn"
+                aria-expanded="true"
+                aria-controls="mobile-genres"
+              >
                 Genres
-                <span class="drop-icon">▼</span>
+                <span class="drop-icon">▾</span>
               </button>
 
-              <ul class="dropdown-menu">
+              <ul class="dropdown-menu" id="mobile-genres">
                 <li id="action"><a href="#" data-genre="28">Action</a></li>
                 <li id="drama"><a href="#" data-genre="18">Drama</a></li>
                 <li id="romance"><a href="#" data-genre="10749">Romance</a></li>
@@ -141,11 +145,15 @@
           </div>
 
           <div class="carousel-container">
-            <button class="scroll-btn prev-btn" aria-label="Scroll left">&#10094;</button>
+            <button class="scroll-btn prev-btn" aria-label="Scroll left">
+              &#10094;
+            </button>
 
             <div class="movie-row trending-row"></div>
 
-            <button class="scroll-btn next-btn" aria-label="Scroll right">&#10095;</button>
+            <button class="scroll-btn next-btn" aria-label="Scroll right">
+              &#10095;
+            </button>
           </div>
         </section>
 
@@ -156,7 +164,10 @@
             <div class="segmented-control" style="--tabs: 3">
               <div class="slider"></div>
 
-              <button class="active" data-endpoint="/discover/movie?with_watch_monetization_types=flatrate">
+              <button
+                class="active"
+                data-endpoint="/discover/movie?with_watch_monetization_types=flatrate"
+              >
                 Streaming
               </button>
 
@@ -167,11 +178,15 @@
           </div>
 
           <div class="carousel-container">
-            <button class="scroll-btn prev-btn" aria-label="Scroll left">&#10094;</button>
+            <button class="scroll-btn prev-btn" aria-label="Scroll left">
+              &#10094;
+            </button>
 
             <div class="movie-row popular-row"></div>
 
-            <button class="scroll-btn next-btn" aria-label="Scroll right">&#10095;</button>
+            <button class="scroll-btn next-btn" aria-label="Scroll right">
+              &#10095;
+            </button>
           </div>
         </section>
 
@@ -181,11 +196,15 @@
           </div>
 
           <div class="carousel-container">
-            <button class="scroll-btn prev-btn" aria-label="Scroll left">&#10094;</button>
+            <button class="scroll-btn prev-btn" aria-label="Scroll left">
+              &#10094;
+            </button>
 
             <div class="movie-row liked-row"></div>
 
-            <button class="scroll-btn next-btn" aria-label="Scroll right">&#10095;</button>
+            <button class="scroll-btn next-btn" aria-label="Scroll right">
+              &#10095;
+            </button>
           </div>
         </section>
       </section>
@@ -253,7 +272,13 @@
         </div>
       </div>
 
-      <button class="scroll-top-btn hidden" title="Back to Top" aria-label="Scroll to top">⇧</button>
+      <button
+        class="scroll-top-btn hidden"
+        title="Back to Top"
+        aria-label="Scroll to top"
+      >
+        ⇧
+      </button>
     </main>
     <footer class="footer-container">
       <div class="footer-links">

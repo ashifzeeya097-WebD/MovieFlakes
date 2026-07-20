@@ -322,6 +322,21 @@ document.addEventListener("click", (e) => {
   }
 });
 
+const mobileDropdownBtn = document.querySelector(
+  ".navbar-mobile .dropdown-btn",
+);
+const mobileDropdownMenu = document.querySelector(
+  ".navbar-mobile .dropdown-menu",
+);
+
+mobileDropdownBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  mobileDropdownMenu.classList.toggle("open");
+  mobileDropdownBtn.setAttribute(
+    "aria-expanded",
+    mobileDropdownMenu.classList.contains("open"),
+  );
+});
 
 function resetHome() {
   searchInput.value = "";

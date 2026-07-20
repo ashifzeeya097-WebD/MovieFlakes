@@ -272,6 +272,13 @@ nav a {
   background-color: var(--bg-color);
   text-shadow: 0 0 12px rgba(36, 212, 252, 0.7);
 }
+.dropdown-btn .drop-icon {
+  font-size: 1.3rem;
+  margin-left: 5px;
+  align-items: center;
+  transition: all 0.3s ease-in-out;
+  transform: translateY(1px);
+}
 
 .dropdown-btn span {
   margin-left: 5px;
@@ -687,10 +694,23 @@ nav a {
   }
 
   .navbar-mobile a:hover {
-    background: var(--bg-color);
     color: var(--accent-color);
     text-shadow: 0 0 12px rgba(36, 212, 252, 0.7);
     padding-left: 34px;
+  }
+
+  .navbar-mobile .dropdown-btn:hover {
+    color: var(--accent-color);
+    text-shadow: 0 0 12px rgba(36, 212, 252, 0.7);
+    padding-left: 34px;
+    box-shadow: none;
+    background-color: transparent;
+  }
+
+  .navbar-mobile .dropdown-menu {
+    display: block;
+    flex-direction: column;
+    padding-left: 0;
   }
 
   .sub-menu {
@@ -1038,8 +1058,8 @@ nav a {
   transition: all 0.2s ease-in;
 }
 
-.ftext{
-  color:rgba(255,255,255,.6);
+.ftext {
+  color: rgba(255, 255, 255, 0.6);
   text-align: center;
   align-items: center;
 }
@@ -1172,4 +1192,48 @@ nav a {
     gap: 5px;
     text-wrap: wrap;
   }
+}
+
+/* Mobile Dropdown Styles */
+.navbar-mobile .dropdown-menu {
+  max-height: 500px;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.3s ease;
+  padding-left: 0 20px;
+}
+
+.navbar-mobile .dropdown-menu.closed {
+  max-height: 0;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.dropdown-menu ul {
+  list-style: disc;
+  padding-left: 20px;
+  margin: 0;
+}
+
+.dropdown-menu li {
+  position: relative;
+  padding-left: 14px;
+  margin: 0;
+}
+
+.dropdown-menu li a::before {
+  content: "⏺";
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.7rem;
+}
+
+.navbar-mobile .dropdown-btn {
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
 }
